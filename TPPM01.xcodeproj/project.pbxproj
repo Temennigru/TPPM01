@@ -6,10 +6,17 @@
 	objectVersion = 46;
 	objects = {
 
+/* Begin PBXFileReference section */
+		0F46525919ABB6DF00D73BEE /* TPPM01.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = TPPM01.java; sourceTree = "<group>"; };
+		0F46525A19ABB72F00D73BEE /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
 /* Begin PBXGroup section */
 		0F9D75AE19ABB649009E7CB8 = {
 			isa = PBXGroup;
 			children = (
+				0F46525919ABB6DF00D73BEE /* TPPM01.java */,
+				0F46525A19ABB72F00D73BEE /* Makefile */,
 			);
 			sourceTree = "<group>";
 		};
@@ -165,6 +172,7 @@
 				0F9D75B819ABB649009E7CB8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
