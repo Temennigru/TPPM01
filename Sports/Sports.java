@@ -29,6 +29,7 @@ public class Sports {
     public class FieldFootball extends Sport {}
 
     public class BeachVolleyball extends Sport {
+        @Override
         public int victor() {
             if (this.points[1] == this.points[0]) {
                 return 2;
@@ -41,6 +42,7 @@ public class Sports {
     }
 
     public class BeachFootball extends Sport {
+        @Override
         public int victor() {
             if (this.points[1] == this.points[0]) {
                 return 2;
