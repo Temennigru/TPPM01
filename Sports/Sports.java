@@ -1,4 +1,8 @@
 public class Sports {
+    
+    
+    
+    
     private abstract class Sport {
         protected final int[] points = new int[2];
         
@@ -20,7 +24,7 @@ public class Sports {
         public void score(int team) { this.score(team, 1); }
     }
 
-    public class Basquetball extends Sport {}
+    public class Basketball extends Sport {}
     
     public class IndoorVolleyBall extends Sport {}
     
