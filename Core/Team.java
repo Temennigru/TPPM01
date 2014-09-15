@@ -53,7 +53,6 @@ public class Team {
         }
         
         // Print matches
-        
         writer.println(String.format("%-12s", "Adversários") + "Placar");
         it = m_matches.iterator();
         while (!it.hasNext()) {
@@ -61,4 +60,6 @@ public class Team {
             m.printStatistics(path, this);
         }
     }
+    
+    protected Sport getSport() { return this.m_sport; }
 }

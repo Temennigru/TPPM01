@@ -23,16 +23,17 @@ public final class Match {
     }
     
     public int getScore (Team team) throws InvalidMatchException {
-             if (m_team[0].countryName() == team.countryName()) { return m_score[0]; }
-        else if (m_team[1].countryName() == team.countryName()) { return m_score[1]; }
-        else                                                    { throw new InvalidMatchException; }
-        
+             if (team.getSport().getClass() != this.m_sport.getClass()) { throw new InvalidMatchException; }
+        else if (m_team[0].countryName() == team.countryName())         { return m_score[0]; }
+        else if (m_team[1].countryName() == team.countryName())         { return m_score[1]; }
+        else                                                            { throw new InvalidMatchException; }
     }
     
     public Team getAdversary (Team team) throws InvalidMatchException {
-        if (m_team[0].countryName() == team.countryName()) { return m_team[1]; }
-        else if (m_team[1].countryName() == team.countryName()) { return m_team[0]; }
-        else                        { throw new InvalidMatchException; }
+             if (team.getSport().getClass() != this.m_sport.getClass()) { throw new InvalidMatchException; }
+        else if (m_team[0].countryName() == team.countryName())         { return m_team[1]; }
+        else if (m_team[1].countryName() == team.countryName())         { return m_team[0]; }
+        else                                                            { throw new InvalidMatchException; }
     }
     
     public void printStatistics (String path, Team team) {
