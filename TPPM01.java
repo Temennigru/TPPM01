@@ -1,12 +1,13 @@
-import Sports.*;
+import Core.CoreSet;
+import Core.*;
 
 
 public class TPPM01 {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws java.io.FileNotFoundException, java.io.IOException {
         
-        Sport b = new Basketball();
+        CoreSet a = new CoreSet();
     
-        System.out.println("hello");
+        a.main();
     
     }
 

@@ -1,5 +1,5 @@
 package Sports;
 
-public class IndoorVolleyBall extends Sport {
+public class IndoorVolleyball extends Sport {
     public String getName() { return "Volei"; }
 }

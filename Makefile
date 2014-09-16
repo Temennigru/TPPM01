@@ -22,4 +22,4 @@ default: $(subst .java,.class,$(wildcard *.java))
 # Removes all .class files, so that the next make rebuilds them
 #
 clean:
-	$(RM) *.class
+	cd Core; $(RM) *.class; cd ..; $(RM) -rf *.class

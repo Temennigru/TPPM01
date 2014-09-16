@@ -1,47 +1,188 @@
 package Core;
 import java.io.File;
 import java.util.Scanner;
+import java.util.*;
+import java.io.*;
+import java.util.Map;
+import Sports.*;
 
 public class InputProcessor {
-	// le a linha inteira e separa strings nos " ; " 
+    
+    public static void process (Map<Integer, Team> teams, Map<Integer, Sport> sports, Vector<PrintData> data) throws java.io.FileNotFoundException, java.io.IOException {
+
+        // le a linha inteira e separa strings nos " ; "
 	
-	// diferentes arquivos de entrada:
-	// esportes.txt     : int ; string - idEsporte ; nome 
-	// selecoes.txt     : int ; int ; string - idSelecao ; idEsporte ; nomePais
-	// atletas.txt      : int ; int ; string - id ; idSelecao ; nome 
-	// partidas.txt     : int ; int ; int ; int ; int - id ; idSelecaoA ; idSelecaoB ; placarSelecaoA ; placarSelecaoB
-	// estatisticas.txt : int ; int - idTipo ; (idEsporte ou idSelecao)
+        // diferentes arquivos de entrada:
+        // esportes.txt     : int ; string - idEsporte ; nome
+        // selecoes.txt     : int ; int ; string - idSelecao ; idEsporte ; nomePais
+        // atletas.txt      : int ; int ; string - id ; idSelecao ; nome
+        // partidas.txt     : int ; int ; int ; int ; int - id ; idSelecaoA ; idSelecaoB ; placarSelecaoA ; placarSelecaoB
+        // estatisticas.txt : int ; int - idTipo ; (idEsporte ou idSelecao)
 	
-	// precisa adequar o processador ao arquivo de entrada para ele dividir corretamente
-	
-	Scanner dis=new Scanner(System.in);
-    int a,b,c,d,e; // 1 a 5 numeros sao passados por LINHA do arquivo de entrada
-    String texto; // no maximo 1 string sera passada por LINHA do arquivo de entrada
-    String line; // guarda a linha INTEIRA com ; e sera separada depois
-    String[] lineVector ;
+        // precisa adequar o processador ao arquivo de entrada para ele dividir corretamente
+        
+        
+        
+        // Scan sports input
+        {
+            Scanner dis = new Scanner(new File("esportes"+".txt"));
+        
+            while (dis.hasNext()) {
 
-    line = dis.nextLine(); //le 1,2,3,4,5
+                String line; // guarda a linha INTEIRA com ; e sera separada depois
 
-    //separa os valores por ponto e virgula
-    lineVector = line.split(";");
+                String[] lineVector ;
+                
+                line = dis.nextLine();
 
-    //passa os valores para inteiros
-    a=Integer.parseInt(lineVector[0]);
-    b=Integer.parseInt(lineVector[1]);
-    c=Integer.parseInt(lineVector[2]);
-    d=Integer.parseInt(lineVector[3]);
-    e=Integer.parseInt(lineVector[4]);
+                if (line.isEmpty()) continue;
+        
+                //separa os valores por ponto e virgula
+                lineVector = line.split(";");
+        
+                if (lineVector[1].trim().equalsIgnoreCase("basquete")) {
+                    Sport temp = new Basketball();
+                    sports.put(Integer.parseInt(lineVector[0]), temp);
+                }
+                else if (lineVector[1].trim().equalsIgnoreCase("volei")) {
+                    Sport temp = new IndoorVolleyball();
+                    sports.put(Integer.parseInt(lineVector[0]), temp);
+                }
+                else if (lineVector[1].trim().equalsIgnoreCase("futebol de salão")) {
+                    Sport temp = new IndoorFootball();
+                    sports.put(Integer.parseInt(lineVector[0]), temp);
+                }
+                else if (lineVector[1].trim().equalsIgnoreCase("futebol")) {
+                    Sport temp = new FieldFootball();
+                    sports.put(Integer.parseInt(lineVector[0]), temp);
+                }
+                else if (lineVector[1].trim().equalsIgnoreCase("futebol de areia")) {
+                    Sport temp = new BeachFootball();
+                    sports.put(Integer.parseInt(lineVector[0]), temp);
+                }
+                else if (lineVector[1].trim().equalsIgnoreCase("volei de praia")) {
+                    Sport temp = new BeachVolleyball();
+                    sports.put(Integer.parseInt(lineVector[0]), temp);
+                }
+                else {
+                    System.out.println("tretas de esporte - " + "\"" + lineVector[1].toLowerCase() + "\"");
+                    System.exit(1);
+                }
+            }
+            
+            
+        }
+        
+        // Scan teams input
+        {
+            Scanner dis = new Scanner(new File("selecoes"+".txt"));
 
-    System.out.println("a="+a);
-    System.out.println("b="+b);
-    System.out.println("c="+c);
-    System.out.println("d="+d);
-    System.out.println("e="+e); 
+            while (dis.hasNext()) {
+                
+                String line; // guarda a linha INTEIRA com ; e sera separada depois
+                String[] lineVector ;
+            
+                line = dis.nextLine();
+
+                if (line.isEmpty()) continue;
+
+                //separa os valores por ponto e virgula
+                lineVector = line.split(";");
+            
+                Team temp = new Team(lineVector[2], sports.get(Integer.parseInt(lineVector[1])));
+            
+            
+                teams.put(Integer.parseInt(lineVector[0]), temp);
+            }
+        }
+        
+        // Scan players input
+        {
+            Scanner dis = new Scanner(new File("atletas"+".txt"));
+            
+            while (dis.hasNext()) {
+                
+                String line; // guarda a linha INTEIRA com ; e sera separada depois
+                String[] lineVector ;
+                
+                line = dis.nextLine();
+
+                if (line.isEmpty()) continue;
+
+                //separa os valores por ponto e virgula
+                lineVector = line.split(";");
+                
+                teams.get(Integer.parseInt(lineVector[1])).addPlayer(lineVector[2]);
+            }
+        }
+        
+        // Scan matches input
+        {
+            Scanner dis = new Scanner(new File("partidas"+".txt"));
+            
+            while (dis.hasNext()) {
+                
+                String line; // guarda a linha INTEIRA com ; e sera separada depois
+
+                String[] lineVector ;
+                
+                line = dis.nextLine();
+
+                if (line.isEmpty()) continue;
+
+                //separa os valores por ponto e virgula
+                lineVector = line.split(";");
+                
+                teams.get(Integer.parseInt(lineVector[1].trim())).match(
+                                        teams.get(Integer.parseInt(lineVector[2].trim())) /*team 2*/,
+                                        Integer.parseInt(lineVector[3].trim())            /*score 1*/,
+                                        Integer.parseInt(lineVector[4].trim())            /*score 2*/,
+                                        Integer.parseInt(lineVector[1].trim())            /*id*/);
+            }
+        }
+        
+        // Scan stats print input
+        {
+            Scanner dis = new Scanner(new File("estatisticas"+".txt"));
+            
+            while (dis.hasNext()) {
+                
+                String line; // guarda a linha INTEIRA com ; e sera separada depois
+                String[] lineVector ;
+                
+                line = dis.nextLine();
+
+                if (line.isEmpty()) continue;
+                
+                //separa os valores por ponto e virgula
+                lineVector = line.split(";");
+                
+                PrintData temp = new PrintData();
+                
+                switch (Integer.parseInt(lineVector[0].trim())) {
+                    case 1: {
+                        temp.sport = Integer.parseInt(lineVector[1].trim());
+                        temp.country = -1;
+                        break;
+                    }
+                    case 2: {
+                        temp.country = Integer.parseInt(lineVector[1].trim());
+                        temp.sport = -1;
+                        break;
+                    }
+                    default: {
+                        System.out.println("me passaram um tipo errado");
+                        System.exit(1);
+                    }
+                }
+                
+                data.add(temp);
+                        
+            }
+        }
+        
+    }
+        
+    
 	
 }
-
-	// 1: int, string
-	// 2: int, int, string
-	// 3: int, int, string (igual) 
-	// 4: int, int, int, int, int
-	// 5: int, int

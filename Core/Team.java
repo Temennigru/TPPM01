@@ -1,5 +1,8 @@
 package Core;
-import java.util;
+import Sports.Sport;
+import java.util.*;
+import java.io.*;
+import java.util.Vector;
 
 public class Team {
     String m_countryName;
@@ -7,8 +10,8 @@ public class Team {
     int m_wins;
     int m_draws;
     int m_losses;
-    Deque<String> m_players;
-    Deque<Match> m_matches;
+    Vector<String> m_players;
+    Vector<Match> m_matches;
     
     private Team() {}
     
@@ -18,46 +21,75 @@ public class Team {
         this.m_wins = 0;
         this.m_draws = 0;
         this.m_losses = 0;
-        this.players = new Deque<String>(players);
-        this.m_matches = new Deque<String>();
+        this.m_players = new Vector<String>(players);
+        this.m_matches = new Vector<Match>();
+    }
+    
+    public Team(String countryName, Sports.Sport sport) {
+        this.m_countryName = countryName;
+        this.m_sport = sport;
+        this.m_wins = 0;
+        this.m_draws = 0;
+        this.m_losses = 0;
+        this.m_players = new Vector<String>();
+        this.m_matches = new Vector<Match>();
     }
 
     //metodo match
-    public void match(Team t2, int scoret1, int scoret2){
-        Match m = new Match(this, t2, score1, score2, this.sport);
-        this.matches.addFirst(m);
+    public void match(Team t2, int scoret1, int scoret2, int id){
+        Match m = new Match(this, t2, scoret1, scoret2, id, this.m_sport);
+        this.m_matches.add(m);
+        t2.match(m);
+
+        Team winner = m.getWinner();
+
+        if (winner == null) { this.m_draws++; }
+        else if (winner == this) { this.m_wins++; }
+        else { this.m_losses++; }
+    }
+    
+    private void match(Match m) {
+        Team winner = m.getWinner();
+
+        if (winner == null) { this.m_draws++; }
+        else if (winner == this) { this.m_wins++; }
+        else { this.m_losses++; }
+        this.m_matches.add(m);
     }
     
     public String countryName() { return this.m_countryName; }
     
-    public void printMatchRecord(String path) {
-        PrintWriter writer = new PrintWriter(new FileWriter(path, true), "UTF-8");
-        String stats = String.format("%-12s", this.m_countryName);
+    public void printMatchRecord(PrintWriter writer) throws java.io.IOException {
+        String stats = String.format("%-12s", this.m_countryName.trim());
         stats += String.format("%-12d", this.m_wins);
-        stats += String.format("%-12d", this.m_draws);
         stats += String.format("%-12d", this.m_losses);
+        stats += String.format("%d", this.m_draws);
         writer.println(stats);
     }
     
-    public void printTeamStatistics(String path) {
+    public void addPlayer (String name) {
+        this.m_players.add(name);
+    }
+    
+    public void printTeamStatistics(PrintWriter writer) throws java.io.IOException {
         
         // Print header
-        PrintWriter writer = new PrintWriter(new FileWriter(path, true), "UTF-8");
         writer.println(this.m_countryName + " - " + this.m_sport.getName());
         
         // Print player names
-        Iterator it = m_players.iterator();
-        while (!it.hasNext()) {
+        writer.println("Atletas");
+        Iterator<String> it = m_players.iterator();
+        while (it.hasNext()) {
             String name = it.next();
             writer.println(name);
         }
         
         // Print matches
-        writer.println(String.format("%-12s", "Adversários") + "Placar");
-        it = m_matches.iterator();
-        while (!it.hasNext()) {
-            Match m = it.next();
-            m.printStatistics(path, this);
+        writer.println(String.format("%-15s", "Adversários") + "Placar");
+        Iterator<Match> it2 = m_matches.iterator();
+        while (it2.hasNext()) {
+            Match m = it2.next();
+            m.printStatistics(writer, this);
         }
     }
     
